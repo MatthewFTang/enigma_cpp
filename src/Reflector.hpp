@@ -7,8 +7,8 @@ class Reflector {
    public:
     Reflector() = default;
     Reflector(std::string reflector_type);
-    std::string Encode(std::string input);
+    const char Encode(const char input);
 
    private:
-    std::unordered_map<std::string, std::string> wiring_;
+    std::unordered_map<char, char> wiring_;
 };

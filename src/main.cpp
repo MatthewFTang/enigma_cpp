@@ -5,7 +5,8 @@
 void printMessage(std::string msg);
 
 int main() {
-    std::string msg = "Test";
+    std::string msg = "BBBB";
+
     EnigmaSettings settings;
     Enigma enigma;
     enigma.Configure(settings);

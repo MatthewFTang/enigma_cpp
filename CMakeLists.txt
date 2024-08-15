@@ -4,7 +4,7 @@ project(Enigma)
 set(CMAKE_CXX_STANDARD 23)
 
 add_executable(Enigma src/main.cpp
-        src/Rotors.h
+        src/Rotors.hpp
         src/Rotors.cpp
         src/Reflector.hpp
         src/Reflector.cpp

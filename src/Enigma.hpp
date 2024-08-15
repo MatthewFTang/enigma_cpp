@@ -16,7 +16,7 @@ class Enigma {
     std::string Encode(std::string message);
 
    private:
-    const std::string EncodeLetter(std::string letter_input);
+    const char EncodeLetter(const char &input_letter);
     Rotors rotor1_;
     Rotors rotor2_;
     Rotors rotor3_;

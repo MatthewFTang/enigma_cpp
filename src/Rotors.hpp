@@ -12,15 +12,17 @@ class Rotors {
     Rotors() = default;
     Rotors(std::string rotor, std::string window_letter,
            Rotors* next = nullptr);
-    std::string EncodeDecodeLetter(std::string character);
+    const char EncodeDecodeLetter(const char& character, bool forwards = true);
     void Step();
 
    private:
     std::string wiring_;
+    std::string inverse_wiring_;
     std::string turnover_;
     std::string window_;
     int current_position_;
 
+    void invert_wiring();
     std::string I_wiring = "EKMFLGDQVZNTOWYHXUSPAIBRCJ";
     std::string II_wiring = "AJDKSIRUXBLHWTMCQGZNPYFVOE";
     std::string III_wiring = "BDFHJLCPRTXVZNYEIWGAKMUSQO";
