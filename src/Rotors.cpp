@@ -1,8 +1,10 @@
-#include "Rotors.h"
+#include "Rotors.hpp"
 
 #include <string>
 
-Rotors::Rotors(std::string rotor) {
+#include "Enigma.hpp"
+
+Rotors::Rotors(std::string rotor, std::string window_position, Rotors* _next) {
     if (rotor == "1") {
         wiring_ = I_wiring;
         turnover_ = I_turnover;
@@ -13,14 +15,25 @@ Rotors::Rotors(std::string rotor) {
         wiring_ = III_wiring;
         turnover_ = III_turnover;
     }
-    current_position_ = 0;
-};
 
-std::string Rotors::Enter(std::string character) {
-    std::string alphabet = "ABCDEFGHIJKLMNOPKRSTQUVWXYZ";
-    auto character_pos = alphabet.find(character);
+    if (_next != nullptr)
+        next_rotor = _next;
+    else
+        next_rotor = nullptr;
+
+    window_ = window_position;
+    current_position_ = ALPHABET.find(window_position);
+};
+void Rotors::Step() {
+    if (next_rotor && window_ == turnover_) {
+        next_rotor->Step();
+    }
+    current_position_ = (current_position_ + 1) % 26;
+    window_ = ALPHABET[current_position_];
+}
+std::string Rotors::EncodeDecodeLetter(std::string character) {
+    auto character_pos = ALPHABET.find(character);
     auto pos = (character_pos + current_position_) % 26;
 
-    current_position_++;
     return std::to_string(wiring_[pos]);
 }

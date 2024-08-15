@@ -3,9 +3,12 @@ project(Enigma)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(Enigma main.cpp
-        Rotors.h
-        IRotor.h
-        Rotor1.cpp
-        Rotor1.h
-        IRotor.cpp)
+add_executable(Enigma src/main.cpp
+        src/Rotors.h
+        src/Rotors.cpp
+        src/Reflector.hpp
+        src/Reflector.cpp
+        src/EnigmaSettings.hpp
+        src/Enigma.hpp
+        src/Enigma.cpp
+)

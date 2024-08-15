@@ -1,23 +1,25 @@
 #pragma once
 #include <string>
-#include <vector>
 
-#include "Rotors.h"
+#include "EnigmaSettings.hpp"
+#include "Reflector.hpp"
+#include "Rotors.hpp"
+extern std::string ALPHABET;
 class Enigma {
    public:
     Enigma() = default;
     ~Enigma() = default;
 
-    void Configure(std::string Rotor1, std::string Rotor2, std::string Rotor3,
-                   std::string Reflector, std::vector<std::string> Plugboard);
+    void Configure(EnigmaSettings settings);
     void Reset();
 
     std::string Encode(std::string message);
-    std::string Decode(std::string cyper_text);
 
    private:
+    const std::string EncodeLetter(std::string letter_input);
     Rotors rotor1_;
     Rotors rotor2_;
     Rotors rotor3_;
+    Reflector reflector_;
     int msg_count_ = 0;
 };

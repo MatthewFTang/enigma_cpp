@@ -10,13 +10,17 @@
 class Rotors {
    public:
     Rotors() = default;
-    Rotors(std::string rotor);
-    std::string Enter(std::string character);
+    Rotors(std::string rotor, std::string window_letter,
+           Rotors* next = nullptr);
+    std::string EncodeDecodeLetter(std::string character);
+    void Step();
 
    private:
     std::string wiring_;
     std::string turnover_;
+    std::string window_;
     int current_position_;
+
     std::string I_wiring = "EKMFLGDQVZNTOWYHXUSPAIBRCJ";
     std::string II_wiring = "AJDKSIRUXBLHWTMCQGZNPYFVOE";
     std::string III_wiring = "BDFHJLCPRTXVZNYEIWGAKMUSQO";
@@ -26,6 +30,8 @@ class Rotors {
     std::string II_turnover = "E";
     std::string III_turnover = "V";
     std::string IV_turnover = "J";
+
+    Rotors* next_rotor;
 };
 
 #endif  // ENIGMA_ROTORS_H
