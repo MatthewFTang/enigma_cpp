@@ -2,13 +2,12 @@
 
 #pragma once
 #include <string>
-#include <unordered_map>
 class Reflector {
    public:
     Reflector() = default;
     Reflector(std::string reflector_type);
-    const char Encode(const char input);
+    const char Encode(int index);
 
    private:
-    std::unordered_map<char, char> wiring_;
+    std::string wiring_;
 };

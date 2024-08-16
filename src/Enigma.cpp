@@ -1,15 +1,14 @@
 #include "Enigma.hpp"
 
-#include <iostream>
 #include <string>
 
 #include "Reflector.hpp"
-std::string ALPHABET = "ABCDEFGHIJKLMNOPKRSTQUVWXYZ";
+std::string ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 void Enigma::Configure(EnigmaSettings settings) {
-    rotor1_ = Rotors(settings.rotor1, settings.window_1);
-    rotor2_ = Rotors(settings.rotor2, settings.window_2, &rotor1_);
-    rotor3_ = Rotors(settings.rotor3, settings.window_3, &rotor2_);
+    rotor_r_ = Rotors(settings.rotor_r, settings.ring_setting_r);
+    rotor_m_ = Rotors(settings.rotor_m, settings.ring_setting_m, &rotor_r_);
+    rotor_l_ = Rotors(settings.rotor_l, settings.ring_setting_l, &rotor_m_);
 
     reflector_ = Reflector(settings.reflector);
 }
@@ -17,22 +16,32 @@ void Enigma::Reset() { msg_count_ = 0; };
 
 std::string Enigma::Encode(std::string message) {
     std::string msg = "";
-    std::cout << " mesggage size = " << message.size() << std::endl;
-    for (int i = 0; i < message.size(); i++) {
-        msg += EncodeLetter(message[i]);
+    // std::cout << std::endl
+    //           << " mesggage size = " << message.size() << std::endl;
+    for (const auto& c : message) {
+        msg += EncodeLetter(c);
     }
     return msg;
 }
 
 const char Enigma::EncodeLetter(const char& letter_input) {
-    rotor3_.Step();
-    std::cout << " input letter " << letter_input << std::endl;
-    auto first_out3 = rotor3_.EncodeDecodeLetter(letter_input);
-    auto first_out2 = rotor2_.EncodeDecodeLetter(first_out3);
-    auto first_out1 = rotor1_.EncodeDecodeLetter(first_out2);
+    rotor_r_.Step();
+    // std::cout << " input letter " << letter_input << std::endl;
+    int firstIndex = letter_input - 'A';
+
+    auto first_out3 = rotor_r_.EncodeDecodeLetterInt(firstIndex);
+    auto first_out2 = rotor_m_.EncodeDecodeLetterInt(first_out3);
+    auto first_out1 = rotor_l_.EncodeDecodeLetterInt(first_out2);
+
     auto relfector_out = reflector_.Encode(first_out1);
-    auto second_out1 = rotor1_.EncodeDecodeLetter(relfector_out, false);
-    auto second_out2 = rotor2_.EncodeDecodeLetter(second_out1, false);
-    auto second_out3 = rotor3_.EncodeDecodeLetter(second_out2, false);
-    return second_out3;
+
+    // std::cout << "first out " << first_out1 << " out encoder " <<
+    // relfector_out
+    // << std::endl;
+    auto second_out1 =
+        rotor_l_.EncodeDecodeLetterInt(relfector_out - 'A', false);
+    auto second_out2 = rotor_m_.EncodeDecodeLetterInt(second_out1, false);
+    auto second_out3 = rotor_r_.EncodeDecodeLetterInt(second_out2, false);
+    auto output_letter = ALPHABET[second_out3];
+    return output_letter;
 }

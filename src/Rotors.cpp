@@ -6,7 +6,7 @@
 
 #include "Enigma.hpp"
 
-Rotors::Rotors(std::string rotor, std::string window_position, Rotors* _next) {
+Rotors::Rotors(std::string rotor, int ring_setting, Rotors* _next) {
     if (rotor == "1") {
         wiring_ = I_wiring;
         turnover_ = I_turnover;
@@ -23,14 +23,15 @@ Rotors::Rotors(std::string rotor, std::string window_position, Rotors* _next) {
     else
         next_rotor = nullptr;
 
-    window_ = window_position;
-    current_position_ = ALPHABET.find(window_position);
+    // window_ = window_position;
+    // auto char_w = window_position.c_str();
+    current_position_ = ring_setting;
     invert_wiring();
 };
 
 void Rotors::invert_wiring() {
     std::string temp_wiring(26, 'A');
-    for (int i = 0; i < wiring_.size(); i++) {
+    for (int i = 0; i < 26; i++) {
         char letter = wiring_[i];
         temp_wiring[letter - 'A'] = 'A' + i;
     }
@@ -42,13 +43,12 @@ void Rotors::Step() {
     }
     current_position_ = (current_position_ + 1) % 26;
     window_ = ALPHABET[current_position_];
-    std::cout << " Rotor::Step = " << current_position_
-              << " Window = " << window_ << std::endl;
+    // std::cout << " Rotor::Step = " << current_position_
+    //           << " Window = " << window_ << std::endl;
 }
 const char Rotors::EncodeDecodeLetter(const char& character, bool forwards) {
-    int character_pos = ALPHABET.find(character);
-
-    auto pos = (character_pos + current_position_) % 26;
+    int character_pos = character - 'A';
+    auto pos = pos_modulo(character_pos + current_position_, 26);
     char output_letter;
     if (forwards) {
         output_letter = wiring_[pos];
@@ -56,6 +56,38 @@ const char Rotors::EncodeDecodeLetter(const char& character, bool forwards) {
         output_letter = inverse_wiring_[pos];
     }
     std::cout << "Rotor ::Input =  " << character
-              << " output = " << output_letter << " Pos = " << pos << std::endl;
+              << " output = " << output_letter << " Pos = " << pos
+              << "current_offset " << current_position_ << std::endl;
     return output_letter;
+}
+
+int Rotors::EncodeDecodeLetterInt(int index, bool forwards) {
+    auto pos = pos_modulo(index + current_position_, 26);
+    char output_letter;
+    if (forwards) {
+        output_letter = wiring_[pos];
+    } else {
+        output_letter = inverse_wiring_[pos];
+    }
+    auto output_index = output_letter - 'A';
+    output_index = pos_modulo(output_index - current_position_, 26);
+    // std::cout << "Rotor :: Output = " << output_index
+    //           << " output = " << output_letter << " forwards = " << forwards
+    //           << " Pos = " << pos << " current_offset " << current_position_
+    //           << std::endl;
+    return output_index;
+}
+
+const char& Rotors::returnLetter(int index, bool forwards) {
+    auto pos = pos_modulo(index + current_position_, 26);
+    // if (forwards)
+    //     return wiring_[pos];
+    // else
+    //     return inverse_wiring_[pos];
+    return wiring_[index];
+}
+int Rotors::pos_modulo(int n, int m) {
+    int val = n % m;
+    if (val < 0) val += m;
+    return val;
 }

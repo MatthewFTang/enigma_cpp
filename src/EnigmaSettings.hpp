@@ -3,12 +3,12 @@
 #include <unordered_map>
 
 struct EnigmaSettings {
-    std::string rotor1 = "2";
-    std::string rotor2 = "2";
-    std::string rotor3 = "2";
-    std::string window_1 = "A";
-    std::string window_2 = "A";
-    std::string window_3 = "A";
+    std::string rotor_l = "3";
+    std::string rotor_m = "2";
+    std::string rotor_r = "1";
+    int ring_setting_l = 0;
+    int ring_setting_m = 0;
+    int ring_setting_r = 1;
     std::string reflector = "B";
 
     std::unordered_map<std::string, std::string> Plugboard;

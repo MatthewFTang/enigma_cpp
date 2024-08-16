@@ -17,9 +17,9 @@ class Enigma {
 
    private:
     const char EncodeLetter(const char &input_letter);
-    Rotors rotor1_;
-    Rotors rotor2_;
-    Rotors rotor3_;
+    Rotors rotor_r_;
+    Rotors rotor_m_;
+    Rotors rotor_l_;
     Reflector reflector_;
     int msg_count_ = 0;
 };
