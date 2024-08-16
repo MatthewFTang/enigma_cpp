@@ -1,4 +1,5 @@
 build
+builddir
 out
-compile_commands
+compile_commands.json
 .cache
