@@ -6,14 +6,15 @@
 
 #include "Enigma.hpp"
 
-Rotors::Rotors(std::string rotor, int ring_setting, Rotors* _next) {
-    if (rotor == "1") {
+Rotors::Rotors(std::string rotor, int ring_setting, std::string window_setting,
+               Rotors* _next) {
+    if (rotor == "I") {
         wiring_ = I_wiring;
         turnover_ = I_turnover;
-    } else if (rotor == "2") {
+    } else if (rotor == "II") {
         wiring_ = II_wiring;
         turnover_ = II_turnover;
-    } else if (rotor == "3") {
+    } else if (rotor == "III") {
         wiring_ = III_wiring;
         turnover_ = III_turnover;
     }
@@ -23,9 +24,9 @@ Rotors::Rotors(std::string rotor, int ring_setting, Rotors* _next) {
     else
         next_rotor = nullptr;
 
-    // window_ = window_position;
-    // auto char_w = window_position.c_str();
-    current_position_ = ring_setting;
+    window_ = window_setting;
+    auto char_w = window_setting.c_str();
+    current_position_ = *char_w - 'A';
     invert_wiring();
 };
 
@@ -43,8 +44,6 @@ void Rotors::Step() {
     }
     current_position_ = (current_position_ + 1) % 26;
     window_ = ALPHABET[current_position_];
-    // std::cout << " Rotor::Step = " << current_position_
-    //           << " Window = " << window_ << std::endl;
 }
 const char Rotors::EncodeDecodeLetter(const char& character, bool forwards) {
     int character_pos = character - 'A';
@@ -79,7 +78,6 @@ int Rotors::EncodeDecodeLetterInt(int index, bool forwards) {
 }
 
 const char& Rotors::returnLetter(int index, bool forwards) {
-    auto pos = pos_modulo(index + current_position_, 26);
     // if (forwards)
     //     return wiring_[pos];
     // else

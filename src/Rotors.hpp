@@ -10,7 +10,8 @@
 class Rotors {
    public:
     Rotors() = default;
-    Rotors(std::string rotor, int ring_setting, Rotors* next = nullptr);
+    Rotors(std::string rotor, int ring_setting, std::string window_setting,
+           Rotors* next = nullptr);
     const char EncodeDecodeLetter(const char& character, bool forwards = true);
     int EncodeDecodeLetterInt(int index, bool forwards = true);
     void Step();
