@@ -1,3 +1,5 @@
+// copyright 2024 Matthew Tang
+//
 #pragma once
 #include <string>
 
@@ -5,21 +7,21 @@
 #include "Plugboard.hpp"
 #include "Reflector.hpp"
 #include "Rotors.hpp"
-extern std::string ALPHABET;
 class Enigma {
-   public:
-    Enigma() = default;
-    ~Enigma() = default;
+ public:
+  Enigma() = default;
+  ~Enigma() = default;
 
-    void Configure(EnigmaSettings settings);
+  void Configure(EnigmaSettings const &settings);
+  void Reset();
 
-    std::string Encode(std::string message);
+  std::string Encode(std::string const &message);
 
-   private:
-    char EncodeLetter(const char input_letter);
-    Rotors rotor_r_;
-    Rotors rotor_m_;
-    Rotors rotor_l_;
-    Reflector reflector_;
-    Plugboard plugboard_;
+ private:
+  char EncodeLetter(const char input_letter);
+  Rotors rotor_r_;
+  Rotors rotor_m_;
+  Rotors rotor_l_;
+  Reflector reflector_;
+  Plugboard plugboard_;
 };

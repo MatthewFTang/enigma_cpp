@@ -1,13 +1,13 @@
-
-
+// Copyright 2024 Matthew Tang
+#pragma once
 #include <unordered_map>
 class Plugboard {
-   public:
-    Plugboard() = default;
-    Plugboard(std::unordered_map<char, char> mapping)
-        : plugboard_settings_(mapping){};
-    char SwapLetter(char c);
+ public:
+  Plugboard() = default;
+  explicit Plugboard(std::unordered_map<char, char> const &mapping);
+  char SwapLetter(char c);
 
-   private:
-    std::unordered_map<char, char> plugboard_settings_;
+ private:
+  std::unordered_map<char, char> plugboard_settings_;
+  std::unordered_map<char, char> plugboard_settings_reverse_;
 };

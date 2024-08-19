@@ -1,3 +1,5 @@
+// Copyright 2024 Matthew Tang
+
 #pragma once
 #include <string>
 #include <unordered_map>
