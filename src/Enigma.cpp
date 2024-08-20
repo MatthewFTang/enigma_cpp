@@ -1,5 +1,8 @@
 // Copyright (c) 2024 Author. All Rights Reserved.
-#include "Enigma.hpp"
+#include "src/Enigma.hpp"
+
+#include <algorithm>
+#include <string>
 
 void Enigma::Configure(EnigmaSettings const& settings) {
   rotor_l_ = Rotors(settings.rotor_l, settings.ring_setting_l,
@@ -12,15 +15,25 @@ void Enigma::Configure(EnigmaSettings const& settings) {
   reflector_ = Reflector(settings.reflector);
   plugboard_ = Plugboard(settings.plugboard);
 }
-
 std::string Enigma::Encode(std::string const& message) {
-  std::string msg = "";
-  for (const auto& c : message) {
+  auto filtered_message = ParseMessage(message);
+  std::string msg;
+  for (const auto& c : filtered_message) {
     msg += EncodeLetter(c);
   }
   return msg;
 }
 
+std::string Enigma::ParseMessage(std::string message) {
+  std::transform(message.begin(), message.end(), message.begin(), ::toupper);
+  std::string temp_message;
+  for (auto const& m : message) {
+    if (std::isalpha(m)) {
+      temp_message += m;
+    }
+  }
+  return temp_message;
+}
 char Enigma::EncodeLetter(const char letter_input) {
   auto new_letter_input = plugboard_.SwapLetter(letter_input);
   rotor_r_.Step();

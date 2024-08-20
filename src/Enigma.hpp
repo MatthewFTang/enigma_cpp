@@ -3,10 +3,10 @@
 #pragma once
 #include <string>
 
-#include "EnigmaSettings.hpp"
-#include "Plugboard.hpp"
-#include "Reflector.hpp"
-#include "Rotors.hpp"
+#include "src/EnigmaSettings.hpp"
+#include "src/Plugboard.hpp"
+#include "src/Reflector.hpp"
+#include "src/Rotors.hpp"
 class Enigma {
  public:
   Enigma() = default;
@@ -19,6 +19,7 @@ class Enigma {
 
  private:
   char EncodeLetter(const char input_letter);
+  std::string ParseMessage(std::string message);
   Rotors rotor_r_;
   Rotors rotor_m_;
   Rotors rotor_l_;

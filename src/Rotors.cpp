@@ -1,9 +1,8 @@
-#include "Rotors.hpp"
+// Copyright (c) 2024 Author. All Rights Reserved.
+#include "src/Rotors.hpp"
 
 #include <iostream>
 #include <string>
-
-#include "Enigma.hpp"
 
 Rotors::Rotors(std::string const& rotor, int ring_setting,
                std::string const& window_setting, Rotors* _next) {
@@ -69,18 +68,10 @@ int Rotors::EncodeDecodeLetterInt(int index, bool forwards) {
   }
   auto output_index = output_letter - 'A';
   output_index = pos_modulo(output_index - current_position_, 26);
-  // std::cout << "Rotor :: Output = " << output_index
-  //           << " output = " << output_letter << " forwards = " << forwards
-  //           << " Pos = " << pos << " current_offset " << current_position_
-  //           << std::endl;
   return output_index;
 }
 
 const char& Rotors::returnLetter(int index, bool forwards) {
-  // if (forwards)
-  //     return wiring_[pos];
-  // else
-  //     return inverse_wiring_[pos];
   return wiring_[index];
 }
 int Rotors::pos_modulo(int n, int m) {

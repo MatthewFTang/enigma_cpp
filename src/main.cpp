@@ -1,24 +1,39 @@
 // Copyright (c) 2024 Author. All Rights Reserved.
+#include <fstream>
 #include <iostream>
 
-#include "Enigma.hpp"
-#include "EnigmaSettings.hpp"
-
+#include "src/Cracker.hpp"
+#include "src/Enigma.hpp"
+#include "src/EnigmaSettings.hpp"
 void printMessage(std::string const &msg);
 void print_settings_and_message(EnigmaSettings const &settings,
                                 std::string const &msg);
 int main() {
-  std::string msg =
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-      "AAAAAAAA";
+  std::string msg;
+  std::fstream file;
+  file.open("/home/matt/Documents/Github/enigma_cpp/src/text.txt");
+  std::string message;
+  while (getline(file, msg)) {
+    message += msg;
+  }
 
+  file.close();
   EnigmaSettings settings;
-
+  settings.plugboard = {};
+  settings.rotor_l = "III";
+  settings.rotor_m = "II";
+  settings.rotor_r = "I";
+  settings.window_setting_l = "R";
+  settings.window_setting_m = "T";
+  settings.window_setting_r = "F";
   Enigma enigma;
-  print_settings_and_message(settings, msg);
+  print_settings_and_message(settings, message);
   enigma.Configure(settings);
-  auto cipher_text = enigma.Encode(msg);
+  auto cipher_text = enigma.Encode(message);
   printMessage(cipher_text);
+
+  Cracker cracker(cipher_text);
+  cracker.RunOnRings();
   return 0;
 }
 
