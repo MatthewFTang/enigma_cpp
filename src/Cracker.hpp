@@ -7,17 +7,22 @@
 
 class Cracker {
  public:
-  Cracker() = default;
-  explicit Cracker(std::string const &message) : message_(message) {}
+  Cracker() = delete;
+  explicit Cracker(std::string const &message);
 
   void RunOnRings();
   void RunOnPlugboard();
   void RunOnReflectors();
-  float IndexOfCoindence(std::string);
+  EnigmaSettings GetCurrentSettings() { return best_settings_; }
+  void SetBestSettings(EnigmaSettings const &settings) {
+    best_settings_ = settings;
+  }
 
  private:
-  std::string message_;
-  std::vector<std::string> rings_{"I", "II", "III"};
+  float IndexOfCoindence(std::string);
+  std::string const &message_;
+  std::vector<std::string> rings_{"I", "II", "III", "IV", "V"};
   int ring_settings_ = 26;
+  EnigmaSettings best_settings_;
   void print_settings_and_message(EnigmaSettings const &settings);
 };

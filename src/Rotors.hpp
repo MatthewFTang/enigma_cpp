@@ -7,7 +7,6 @@ class Rotors {
   Rotors() = default;
   Rotors(std::string const& rotor, int ring_setting,
          std::string const& window_setting, Rotors* next = nullptr);
-  const char EncodeDecodeLetter(const char& character, bool forwards = true);
   int EncodeDecodeLetterInt(int index, bool forwards = true);
   void Step();
   const char& returnLetter(int index, bool forwards = true);

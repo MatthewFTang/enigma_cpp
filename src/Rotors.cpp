@@ -15,6 +15,12 @@ Rotors::Rotors(std::string const& rotor, int ring_setting,
   } else if (rotor == "III") {
     wiring_ = III_wiring;
     turnover_ = III_turnover;
+  } else if (rotor == "IV") {
+    wiring_ = IV_wiring;
+    turnover_ = IV_turnover;
+  } else if (rotor == "V") {
+    wiring_ = V_wiring;
+    turnover_ = V_turnover;
   }
 
   if (_next != nullptr)
@@ -43,21 +49,6 @@ void Rotors::Step() {
   }
   window_ = current_position_ + 'A';
 }
-const char Rotors::EncodeDecodeLetter(const char& character, bool forwards) {
-  int character_pos = character - 'A';
-  auto pos = pos_modulo(character_pos + current_position_, 26);
-  char output_letter;
-  if (forwards) {
-    output_letter = wiring_[pos];
-  } else {
-    output_letter = inverse_wiring_[pos];
-  }
-  std::cout << "Rotor ::Input =  " << character << " output = " << output_letter
-            << " Pos = " << pos << "current_offset " << current_position_
-            << std::endl;
-  return output_letter;
-}
-
 int Rotors::EncodeDecodeLetterInt(int index, bool forwards) {
   auto pos = pos_modulo(index + current_position_, 26);
   char output_letter;

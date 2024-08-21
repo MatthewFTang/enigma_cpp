@@ -5,9 +5,21 @@
 #include <algorithm>
 #include <iostream>
 #include <ostream>
+#include <string>
+#include <unordered_map>
 
 #include "src/Enigma.hpp"
 #include "src/EnigmaSettings.hpp"
+
+Cracker::Cracker(std::string const &message) : message_(message) {
+  best_settings_.rotor_r = 'A';
+  best_settings_.rotor_m = 'A';
+  best_settings_.rotor_l = 'A';
+  best_settings_.plugboard = {};
+  best_settings_.ring_setting_r = 'A';
+  best_settings_.ring_setting_m = 'A';
+  best_settings_.ring_setting_l = 'A';
+}
 float Cracker::IndexOfCoindence(std::string message) {
   float I = 0;
 
@@ -20,12 +32,11 @@ float Cracker::IndexOfCoindence(std::string message) {
   return I;
 }
 void Cracker::RunOnRings() {
-  EnigmaSettings settings;
+  EnigmaSettings settings = best_settings_;
   Enigma enigma;
   std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  EnigmaSettings bestsettings;
   double maxFitness = 0;
-  settings.plugboard = {};
+  settings.plugboard = {};  // make sure that no plugs are included
   for (auto const &ring1 : rings_) {
     settings.rotor_r = ring1;
     for (auto const &ring2 : rings_) {
@@ -44,7 +55,7 @@ void Cracker::RunOnRings() {
               float ioc = IndexOfCoindence(decypt);
               if (ioc > maxFitness) {
                 maxFitness = ioc;
-                bestsettings = settings;
+                best_settings_ = settings;
               }
             }
           }
@@ -52,11 +63,44 @@ void Cracker::RunOnRings() {
       }
     }
   }
-  print_settings_and_message(bestsettings);
+  print_settings_and_message(best_settings_);
 }
 void Cracker::RunOnPlugboard() {
-  // TODO
+  Enigma enigma;
+  enigma.Configure(best_settings_);
+  auto original_msg = enigma.Encode(message_);
+  float maxFitness = IndexOfCoindence(
+      original_msg);  // set the min fitness as the setting with no plugs
+
+  std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+  for (auto const &letter_1 : alphabet) {
+    double loopMax = 0;
+    char best_plug_loop[2];
+    auto temp_settings = best_settings_;
+    auto original_plugs_for_loop = temp_settings.plugboard;
+    for (auto const &letter_2 : alphabet) {
+      if (letter_1 >= letter_2) continue;
+      auto temp_plugs = original_plugs_for_loop;
+      temp_plugs[letter_1] = letter_2;
+      temp_settings.plugboard = temp_plugs;
+      enigma.Configure(temp_settings);
+      auto decrpyt = enigma.Encode(message_);
+      auto ioc = IndexOfCoindence(decrpyt);
+      if (ioc > loopMax) {
+        best_plug_loop[0] = letter_1;
+        best_plug_loop[1] = letter_2;
+        loopMax = ioc;
+      }
+    }
+    if (loopMax > maxFitness) {
+      maxFitness = loopMax;
+      best_settings_.plugboard[best_plug_loop[0]] = best_plug_loop[1];
+    }
+  }
+  print_settings_and_message(best_settings_);
 }
+
 void Cracker::RunOnReflectors() {
   // TODO
 }
@@ -72,4 +116,11 @@ void Cracker::print_settings_and_message(EnigmaSettings const &settings) {
   std::cout << "Plugboard settings" << std::endl;
   for (auto it : settings.plugboard)
     std::cout << it.first << "<->" << it.second << std::endl;
+
+  Enigma enigma;
+  enigma.Configure(settings);
+  auto curent_output = enigma.Encode(message_);
+
+  std::cout << "Current message " << std::endl;
+  std::cout << curent_output << std::endl;
 }

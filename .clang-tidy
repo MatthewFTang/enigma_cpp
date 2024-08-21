@@ -1,0 +1,13 @@
+Checks:          '-*,llvm-*,clang-analyzer-*,modernize-*,performance-*'
+WarningsAsErrors: ''
+HeaderFilterRegex: ''
+AnalyzeTemporaryDtors: false
+FormatStyle:     none
+User:            ''
+CheckOptions:    
+  - key:             modernize-use-auto.MinTypeNameLength
+    value:           '0'
+  - key:             modernize-use-auto.RemoveStars
+    value:           '0'
+  - key:             modernize-use-nullptr.NullMacros
+    value:           'NULL'

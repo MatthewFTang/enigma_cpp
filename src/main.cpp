@@ -11,7 +11,7 @@ void print_settings_and_message(EnigmaSettings const &settings,
 int main() {
   std::string msg;
   std::fstream file;
-  file.open("/home/matt/Documents/Github/enigma_cpp/src/text.txt");
+  file.open("/home/matt/Documents/Github/enigma_cpp/src/text2.txt");
   std::string message;
   while (getline(file, msg)) {
     message += msg;
@@ -20,20 +20,23 @@ int main() {
   file.close();
   EnigmaSettings settings;
   settings.plugboard = {};
-  settings.rotor_l = "III";
-  settings.rotor_m = "II";
-  settings.rotor_r = "I";
-  settings.window_setting_l = "R";
-  settings.window_setting_m = "T";
-  settings.window_setting_r = "F";
-  Enigma enigma;
-  print_settings_and_message(settings, message);
-  enigma.Configure(settings);
-  auto cipher_text = enigma.Encode(message);
-  printMessage(cipher_text);
+  settings.rotor_l = "II";
+  settings.rotor_m = "V";
+  settings.rotor_r = "III";
+  settings.reflector = "B";
+  settings.window_setting_l = "V";
+  settings.window_setting_m = "D";
+  settings.window_setting_r = "Z";
+  // // Enigma enigma;
+  // // print_settings_and_message(settings, message);
+  // enigma.Configure(settings);
+  // auto cipher_text = enigma.Encode(message);
+  // printMessage(cipher_text);
 
-  Cracker cracker(cipher_text);
-  cracker.RunOnRings();
+  Cracker cracker(message);
+  // cracker.RunOnRings();
+  cracker.SetBestSettings(settings);
+  cracker.RunOnPlugboard();
   return 0;
 }
 
