@@ -3,6 +3,7 @@
 #include "src/Cracker.hpp"
 
 #include <algorithm>
+#include <exception>
 #include <iostream>
 #include <ostream>
 #include <string>
@@ -22,7 +23,6 @@ Cracker::Cracker(std::string const &message) : message_(message) {
 }
 float Cracker::IndexOfCoindence(std::string message) {
   float I = 0;
-
   const double message_length = message.length();
   std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   for (auto const &c : alphabet) {
@@ -36,6 +36,7 @@ void Cracker::RunOnRings() {
   Enigma enigma;
   std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   double maxFitness = 0;
+
   settings.plugboard = {};  // make sure that no plugs are included
   for (auto const &ring1 : rings_) {
     settings.rotor_r = ring1;
@@ -69,17 +70,37 @@ void Cracker::RunOnPlugboard() {
   Enigma enigma;
   enigma.Configure(best_settings_);
   auto original_msg = enigma.Encode(message_);
-  float maxFitness = IndexOfCoindence(
-      original_msg);  // set the min fitness as the setting with no plugs
+  float maxFitness = IndexOfCoindence(original_msg);
+  std::string unpluggedCharacters =
+      findUnpluggedLetters(best_settings_.plugboard);
 
-  std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-  for (auto const &letter_1 : alphabet) {
+  for (int i = 0; i < maxPlugs_; i++) {
+    auto new_settings =
+        findPlug(unpluggedCharacters, maxFitness, best_settings_);
+    enigma.Configure(new_settings);
+    auto msg = enigma.Encode(message_);
+    auto fitness = IndexOfCoindence(msg);
+    if (fitness > maxFitness) {
+      best_settings_ = new_settings;
+      maxFitness = fitness;
+      unpluggedCharacters = findUnpluggedLetters(best_settings_.plugboard);
+    } else {
+      break;
+    }
+  }
+  print_settings_and_message(best_settings_);
+}
+EnigmaSettings Cracker::findPlug(std::string unpluggedCharacters,
+                                 float currentFitness,
+                                 EnigmaSettings current_settings) {
+  Enigma enigma;
+  auto original_settings = current_settings;
+  for (const auto &letter_1 : unpluggedCharacters) {
     double loopMax = 0;
     char best_plug_loop[2];
     auto temp_settings = best_settings_;
     auto original_plugs_for_loop = temp_settings.plugboard;
-    for (auto const &letter_2 : alphabet) {
+    for (const auto &letter_2 : unpluggedCharacters) {
       if (letter_1 >= letter_2) continue;
       auto temp_plugs = original_plugs_for_loop;
       temp_plugs[letter_1] = letter_2;
@@ -93,14 +114,22 @@ void Cracker::RunOnPlugboard() {
         loopMax = ioc;
       }
     }
-    if (loopMax > maxFitness) {
-      maxFitness = loopMax;
-      best_settings_.plugboard[best_plug_loop[0]] = best_plug_loop[1];
+    if (loopMax > currentFitness) {
+      original_settings.plugboard[best_plug_loop[0]] = best_plug_loop[1];
+      break;
     }
   }
-  print_settings_and_message(best_settings_);
+  return original_settings;
 }
-
+std::string Cracker::findUnpluggedLetters(
+    std::unordered_map<char, char> plugboard) {
+  std::string full = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  for (const auto [first, second] : plugboard) {
+    full.erase(std::remove(full.begin(), full.end(), first), full.end());
+    full.erase(std::remove(full.begin(), full.end(), second), full.end());
+  }
+  return full;
+}
 void Cracker::RunOnReflectors() {
   // TODO
 }

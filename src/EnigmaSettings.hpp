@@ -16,5 +16,5 @@ struct EnigmaSettings {
   int ring_setting_r = 0;
   std::string reflector = "B";
   std::unordered_map<char, char> plugboard = {
-      {'A', 'Y'}, {'B', 'E'}, {'H', 'I'}};
+      {'A', 'Y'}, {'B', 'E'}, {'H', 'I'}, {'S', 'T'}, {'Z', 'G'}, {'K', 'O'}};
 };
