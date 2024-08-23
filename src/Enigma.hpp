@@ -3,10 +3,10 @@
 #pragma once
 #include <string>
 
-#include "src/EnigmaSettings.hpp"
-#include "src/Plugboard.hpp"
-#include "src/Reflector.hpp"
-#include "src/Rotors.hpp"
+#include "EnigmaSettings.hpp"
+#include "Plugboard.hpp"
+#include "Reflector.hpp"
+#include "Rotors.hpp"
 class Enigma {
  public:
   Enigma() = default;

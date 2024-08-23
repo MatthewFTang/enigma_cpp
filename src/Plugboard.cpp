@@ -1,5 +1,5 @@
 // Copyright (c) 2024 Author. All Rights Reserved.
-#include "src/Plugboard.hpp"
+#include "Plugboard.hpp"
 
 char Plugboard::SwapLetter(char c) {
   auto it = plugboard_settings_.find(c);

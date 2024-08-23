@@ -1,7 +1,6 @@
 // Copyright (c) 2024 Author. All Rights Reserved.
-#include "src/Rotors.hpp"
+#include "Rotors.hpp"
 
-#include <iostream>
 #include <string>
 
 Rotors::Rotors(std::string const& rotor, int ring_setting,

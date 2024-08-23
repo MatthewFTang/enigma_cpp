@@ -4,7 +4,7 @@
 #include <unordered_set>
 #include <vector>
 
-#include "src/EnigmaSettings.hpp"
+#include "EnigmaSettings.hpp"
 
 class Cracker {
  public:

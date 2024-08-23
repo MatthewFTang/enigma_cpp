@@ -1,5 +1,5 @@
 // Copyright (c) 2024 Author. All Rights Reserved.
-#include "src/Enigma.hpp"
+#include "Enigma.hpp"
 
 #include <algorithm>
 #include <string>
