@@ -93,11 +93,8 @@ int main(int, char**) {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::Begin("Enigma window", nullptr, window_flags);
-        /*ImGui::BeginChild("Main");*/
         myApp.Run();
-        /*ImGui::EndChild();*/
-        ImGui::End();
+        if (myApp.ShouldQuit()) glfwSetWindowShouldClose(window, GLFW_TRUE);
         // Rendering
         ImGui::Render();
         int display_w, display_h;
