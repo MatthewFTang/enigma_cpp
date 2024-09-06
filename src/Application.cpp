@@ -1,10 +1,11 @@
+// Copyright (C) 2024 The Author
 #include "Application.h"
 
+#include <cstring>
 #include <iostream>
-#include <ostream>
 #include <string>
 
-#include "imgui.h"
+#include "../imgui/imgui.h"
 Application::Application() {
     ImGui::StyleColorsDark();
     auto& style = ImGui::GetStyle();
@@ -50,8 +51,6 @@ Application::Application() {
         ImVec4(1.00f, 1.00f, 1.00f, 0.60f);
     style.Colors[ImGuiCol_ResizeGripActive] =
         ImVec4(1.00f, 1.00f, 1.00f, 0.90f);
-    ImVec4(0.70f, 0.70f, 0.90f, 0.60f);
-    ImVec4(0.70f, 0.70f, 0.70f, 1.00f);
     style.Colors[ImGuiCol_PlotLines] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
     style.Colors[ImGuiCol_PlotLinesHovered] =
         ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
@@ -61,23 +60,11 @@ Application::Application() {
     style.Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.00f, 0.00f, 1.00f, 0.35f);
 }
 void Application::TextInput() {
-    /*ImGui::ShowDemoWindow();*/
-    ImGui::BeginChild("text", {600, 300});
-    static char text[1024 * 16] = "Input your text here";
-
+    ImGui::BeginChild("text", {1200, 200});
     static ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
-    ImGui::InputTextMultiline("##source", text, IM_ARRAYSIZE(text),
-                              ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16),
-                              flags);
+    ImGui::InputTextMultiline("adf", &message_[0], IM_ARRAYSIZE(message_),
+                              {1200, 200}, flags);
     ImGui::EndChild();
-}
-
-// Demonstrate create a window with multiple child windows.
-void Application::AlignForWidth(float width, float alignment) {
-    ImGuiStyle& stAyle = ImGui::GetStyle();
-    float avail = ImGui::GetContentRegionAvail().x;
-    float off = (avail - width) * alignment;
-    if (off > 0.0f) ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
 }
 
 void Application::RotorSelector() {
@@ -102,7 +89,6 @@ void Application::WindowSelector() {
                            "S", "T", "U", "V", "W", "X", "Y", "Z"};
     ImGui::Text("Window");
     ImGui::NewLine();
-    static bool menu = false;
 
     for (int i = 0; i < 3; i++) {
         ImGui::SameLine();
@@ -120,14 +106,36 @@ void Application::ReflectorSelector() {
     ImGui::ListBox(" ", &reflector_selection_, items, IM_ARRAYSIZE(items));
     ImGui::EndChild();
 }
+void Application::ConfigureWithSettings() {
+    settings_.rotor_l = IntToRoman(rotor_selection_[0]);
+    settings_.rotor_m = IntToRoman(rotor_selection_[1]);
+    settings_.rotor_r = IntToRoman(rotor_selection_[2]);
+    settings_.window_setting_l = static_cast<char>(window_selection_[0] + 'A');
+    settings_.window_setting_m = static_cast<char>(window_selection_[1] + 'A');
+    settings_.window_setting_r = static_cast<char>(window_selection_[2] + 'A');
+    settings_.plugboard = {};
+    settings_.reflector = static_cast<char>(reflector_selection_ + 'A');
+    std::cout << "settings >>" << settings_.window_setting_l << " "
+              << settings_.window_setting_m << " " << settings_.window_setting_r
+              << std::endl;
+    enigma_ = Enigma();
+    enigma_.Configure(settings_);
+    auto message = std::string(message_);
+    cipher_ = enigma_.Encode(message);
+}
+
+void Application::DisplayCipher() {
+    ImGui::BeginChild("cipher", {1200, 200});
+    ImGui::Text("%s", FormatMessageForMorse(cipher_).c_str());
+    ImGui::EndChild();
+}
 void Application::Run() {
-    ImGui::SetNextWindowSize({800, 900});
+    ImGui::SetNextWindowSize({1280, 1200});
+    ImGui::SetNextWindowPos({0, 0});
     ImGui::Begin("Enigma simulator", nullptr,
                  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
                      ImGuiWindowFlags_NoMove);
-    auto window_position = ImGui::GetWindowPos();
-    auto window_size = ImGui::GetWindowSize();
-    /*ImGui::SeparatorText("Settings");*/
+    ImGui::BeginGroup();
     ImGui::SeparatorText("Settings");
 
     RotorSelector();
@@ -137,9 +145,41 @@ void Application::Run() {
     ReflectorSelector();
     ImGui::SeparatorText("Input message");
     TextInput();
+
+    if (ImGui::Button("Encrypt")) {
+        ConfigureWithSettings();
+    }
+    DisplayCipher();
     if (ImGui::Button("Quit")) {
         should_quit = true;
     }
-    std::cout << reflector_selection_ << std::endl;
+    ImGui::EndGroup();
     ImGui::End();
+}
+std::string Application::IntToRoman(int rotor) {
+    switch (rotor) {
+        case (0):
+            return "I";
+        case (1):
+            return "II";
+        case (2):
+            return "III";
+        case (3):
+            return "IV";
+        case (4):
+            return "V";
+        default:
+            return "I";
+    }
+}
+std::string Application::FormatMessageForMorse(const std::string& message) {
+    std::string new_message;
+
+    for (int i = 0; i < message.size(); i++) {
+        if (i > 0 && i % 5 == 0) {
+            new_message += " ";
+        }
+        new_message += message[i];
+    }
+    return new_message;
 }

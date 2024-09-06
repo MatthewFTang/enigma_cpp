@@ -4,9 +4,7 @@
 #include "Cracker.hpp"
 
 #include <algorithm>
-#include <exception>
 #include <iostream>
-#include <ostream>
 #include <string>
 #include <unordered_map>
 
@@ -92,7 +90,7 @@ void Cracker::RunOnPlugboard() {
     }
     print_settings_and_message(best_settings_);
 }
-EnigmaSettings Cracker::findPlug(std::string unpluggedCharacters,
+EnigmaSettings Cracker::findPlug(std::string &unpluggedCharacters,
                                  float currentFitness,
                                  EnigmaSettings current_settings) {
     Enigma enigma;
