@@ -4,11 +4,11 @@
 #include <string>
 
 class Reflector {
- public:
-  Reflector() = default;
-  explicit Reflector(std::string const &reflector_type);
-  const char Encode(int index);
+   public:
+    Reflector() = default;
+    explicit Reflector(std::string const &reflector_type);
+    char Encode(int index);
 
- private:
-  std::string wiring_;
+   private:
+    std::string wiring_;
 };

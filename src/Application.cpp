@@ -1,15 +1,19 @@
 // Copyright (C) 2024 The Author
 #include "Application.h"
 
+#include <algorithm>
+#include <cctype>
+#include <cstdio>
 #include <cstring>
-#include <iostream>
 #include <string>
 
 #include "../imgui/imgui.h"
+
 Application::Application() {
     ImGui::StyleColorsDark();
     StyleGui();
 }
+
 void Application::TextInput() {
     ImGui::BeginChild("text", {window_width_, top_settings_height_});
     static ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
@@ -32,14 +36,20 @@ void Application::RotorSelector() {
     ImGui::PopItemWidth();
     ImGui::EndChild();
 }
+
 void Application::PlugboardSettings() {
     ImGui::BeginChild("plugs", {window_width_, 75});
     ImGui::Text("Plugboard connections");
+    char buffer[1024] = {0};
+    if (plugboard_message_.size() < 1024) {
+        strcpy(buffer, plugboard_message_.c_str());
+    }
     static ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
-    ImGui::InputText(" ", plugboard_message_, IM_ARRAYSIZE(plugboard_message_),
-                     flags);
+    ImGui::InputText(" ", buffer, IM_ARRAYSIZE(buffer), flags);
+    plugboard_message_ = std::string(buffer);
     ImGui::EndChild();
 }
+
 void Application::WindowSelector() {
     ImGui::BeginChild("center", {250, top_settings_height_});
     ImGui::PushItemWidth(80);
@@ -53,18 +63,19 @@ void Application::WindowSelector() {
         ImGui::SameLine();
         ImGui::PushID(i);
         ImGui::ListBox("", &window_selection_[i], items, IM_ARRAYSIZE(items));
-
         ImGui::PopID();
     }
     ImGui::EndChild();
 }
+
 void Application::ReflectorSelector() {
-    ImGui::BeginChild("right", {80, top_settings_height_});
+    ImGui::BeginChild("right", {100, top_settings_height_});
     const char* items[] = {"A", "B", "C"};
     ImGui::Text("Reflector");
     ImGui::ListBox(" ", &reflector_selection_, items, IM_ARRAYSIZE(items));
     ImGui::EndChild();
 }
+
 void Application::ConfigureWithSettings() {
     settings_.rotor_l = IntToRoman(rotor_selection_[0]);
     settings_.rotor_m = IntToRoman(rotor_selection_[1]);
@@ -72,7 +83,8 @@ void Application::ConfigureWithSettings() {
     settings_.window_setting_l = static_cast<char>(window_selection_[0] + 'A');
     settings_.window_setting_m = static_cast<char>(window_selection_[1] + 'A');
     settings_.window_setting_r = static_cast<char>(window_selection_[2] + 'A');
-    settings_.plugboard = {};
+    ParsePlugboardSettings();
+    settings_.plugboard = plugboard_settings_;
     settings_.reflector = static_cast<char>(reflector_selection_ + 'A');
     enigma_ = Enigma();
     enigma_.Configure(settings_);
@@ -82,9 +94,10 @@ void Application::ConfigureWithSettings() {
 
 void Application::DisplayCipher() {
     ImGui::BeginChild("cipher", {window_width_, 200});
-    ImGui::Text("%s", FormatMessageForMorse(cipher_).c_str());
+    ImGui::TextWrapped("%s", FormatMessageForMorse(cipher_).c_str());
     ImGui::EndChild();
 }
+
 void Application::Run() {
     ImGui::SetNextWindowSize({1280, window_width_});
     ImGui::SetNextWindowPos({0, 0});
@@ -104,7 +117,7 @@ void Application::Run() {
 
     ImGui::SeparatorText("Input message");
     TextInput();
-
+    ImGui::ShowDemoWindow();
     if (ImGui::Button("Encrypt")) {
         ConfigureWithSettings();
     }
@@ -115,6 +128,7 @@ void Application::Run() {
     ImGui::EndGroup();
     ImGui::End();
 }
+
 std::string Application::IntToRoman(int rotor) {
     switch (rotor) {
         case (0):
@@ -131,6 +145,7 @@ std::string Application::IntToRoman(int rotor) {
             return "I";
     }
 }
+
 std::string Application::FormatMessageForMorse(const std::string& message) {
     std::string new_message;
 
@@ -142,9 +157,35 @@ std::string Application::FormatMessageForMorse(const std::string& message) {
     }
     return new_message;
 }
+
+void Application::ParsePlugboardSettings() {
+    plugboard_settings_.clear();
+    std::string parsedSettings;
+    if (plugboard_message_.size() > 0) {
+        for (size_t i = 0; i < plugboard_message_.size() - 1; i++) {
+            if (plugboard_message_[i] == ' ')
+                continue;  // skip the first character if it's a blank
+            if (std::isalpha(plugboard_message_[i]) &&
+                std::isalpha(plugboard_message_[i + 1])) {
+                plugboard_settings_[plugboard_message_[i]] =
+                    plugboard_message_[i + 1];
+                parsedSettings += plugboard_message_[i];
+                parsedSettings += plugboard_message_[i + 1];
+                parsedSettings += ' ';
+                i += 1;
+            }
+        }
+        std::transform(parsedSettings.begin(), parsedSettings.end(),
+                       parsedSettings.begin(), ::toupper);
+    }
+    plugboard_message_ = parsedSettings;
+}
+
 void Application::StyleGui() {
     auto& io = ImGui::GetIO();
-    io.Fonts->AddFontFromFileTTF("assets/fonts/test.ttf", 28.0f);
+
+    io.FontDefault =
+        io.Fonts->AddFontFromFileTTF("assets/fonts/test.ttf", 22.0f);
     auto& style = ImGui::GetStyle();
     style.WindowRounding = 10.0f;
     style.FrameRounding = 10.0f;
@@ -192,8 +233,4 @@ void Application::StyleGui() {
     style.Colors[ImGuiCol_PlotHistogramHovered] =
         ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
     style.Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.00f, 0.00f, 1.00f, 0.35f);
-}
-void Application::ParsePlugboardSettings() {
-    plugboard_settings_.clear();
-    std::string parsedSettings;
 }

@@ -32,7 +32,7 @@ class Application {
     std::unordered_map<char, char> plugboard_settings_;
     char message_[1024 * 16];
     std::string cipher_;
-    char plugboard_message_[1024] = "ab dc";
+    std::string plugboard_message_ = "ab cd";
     Enigma enigma_;
     EnigmaSettings settings_;
     float top_settings_height_ = 150;

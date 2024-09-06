@@ -17,7 +17,7 @@ class Rotors {
     std::string inverse_wiring_;
     std::string turnover_;
     std::string window_;
-    int current_position_;
+    int current_position_{};
 
     void invert_wiring();
     int pos_modulo(int n, int m);
@@ -26,12 +26,17 @@ class Rotors {
     std::string III_wiring = "BDFHJLCPRTXVZNYEIWGAKMUSQO";
     std::string IV_wiring = "ESOVPZJAYQUIRHXLNFTGKDCMWB";
     std::string V_wiring = "VZBRGITYUPSDNHLXAWMJQOFECK";
+    std::string VI_wiring = "JPGVOUMFYQBENHZRDKASXLICTW";
+    std::string VII_wiring = "NZJHGRCXMYSWBOUFAIVLPEKQDT";
+    std::string VIII_wiring = "FKQHTLXOCBJSPDZRAMEWNIUYGVDT";
 
     std::string I_turnover = "Q";
     std::string II_turnover = "E";
     std::string III_turnover = "V";
     std::string IV_turnover = "J";
     std::string V_turnover = "Z";
-
-    Rotors* next_rotor;
+    std::string VI_turnover = "Z";
+    std::string VII_turnover = "Z";
+    std::string VIII_turnover = "Z";
+    Rotors* next_rotor{};
 };

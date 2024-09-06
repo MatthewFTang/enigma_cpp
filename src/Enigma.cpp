@@ -7,7 +7,6 @@
 void Enigma::Configure(EnigmaSettings const& settings) {
     rotor_l_ = Rotors(settings.rotor_l, settings.ring_setting_l,
                       settings.window_setting_l);
-
     rotor_m_ = Rotors(settings.rotor_m, settings.ring_setting_m,
                       settings.window_setting_m, &rotor_l_);
     rotor_r_ = Rotors(settings.rotor_r, settings.ring_setting_r,
@@ -51,7 +50,7 @@ char Enigma::EncodeLetter(const char letter_input) {
         rotor_l_.EncodeDecodeLetterInt(relfector_out - 'A', false);
     auto second_out2 = rotor_m_.EncodeDecodeLetterInt(second_out1, false);
     auto second_out3 = rotor_r_.EncodeDecodeLetterInt(second_out2, false);
-    auto output_letter = second_out3 + 'A';
+    char output_letter = static_cast<char>(second_out3 + 'A');
     output_letter = plugboard_.SwapLetter(output_letter);
     return output_letter;
 }
