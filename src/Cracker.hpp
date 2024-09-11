@@ -22,7 +22,7 @@ class Cracker {
     float IndexOfCoindence(std::string);
     EnigmaSettings findPlug(std::string &unpluggedCharacters,
                             float currentFitness,
-                            EnigmaSettings current_setting);
+                            EnigmaSettings &current_setting);
     std::string findUnpluggedLetters(std::unordered_map<char, char> plugboard);
     std::string const &message_;
     std::vector<std::string> rings_{"I", "II", "III", "IV", "V"};

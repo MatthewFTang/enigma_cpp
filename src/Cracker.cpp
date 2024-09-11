@@ -11,6 +11,8 @@
 #include "Enigma.hpp"
 #include "EnigmaSettings.hpp"
 
+using std::unordered_map;
+
 Cracker::Cracker(std::string const &message) : message_(message) {
     best_settings_.rotor_r = 'A';
     best_settings_.rotor_m = 'A';
@@ -22,10 +24,10 @@ Cracker::Cracker(std::string const &message) : message_(message) {
 }
 float Cracker::IndexOfCoindence(std::string message) {
     float I = 0;
-    const double message_length = message.length();
+    const auto message_length = static_cast<float>(message.length());
     std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     for (auto const &c : alphabet) {
-        double count = std::count(message.begin(), message.end(), c);
+        float count = std::count(message.begin(), message.end(), c);
         I += (count * (count - 1)) / (message_length * (message_length - 1));
     }
     return I;
@@ -92,7 +94,7 @@ void Cracker::RunOnPlugboard() {
 }
 EnigmaSettings Cracker::findPlug(std::string &unpluggedCharacters,
                                  float currentFitness,
-                                 EnigmaSettings current_settings) {
+                                 EnigmaSettings &current_settings) {
     Enigma enigma;
     auto original_settings = current_settings;
     for (const auto &letter_1 : unpluggedCharacters) {
@@ -121,8 +123,7 @@ EnigmaSettings Cracker::findPlug(std::string &unpluggedCharacters,
     }
     return original_settings;
 }
-std::string Cracker::findUnpluggedLetters(
-    std::unordered_map<char, char> plugboard) {
+std::string Cracker::findUnpluggedLetters(unordered_map<char, char> plugboard) {
     std::string full = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     for (const auto [first, second] : plugboard) {
         full.erase(std::remove(full.begin(), full.end(), first), full.end());

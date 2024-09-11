@@ -1,6 +1,8 @@
 // Copyright (c) 2024 Author. All Rights Reserved.
 #include "Rotors.hpp"
 
+#include <iostream>
+#include <ostream>
 #include <string>
 
 Rotors::Rotors(std::string const& rotor, int ring_setting,
@@ -22,10 +24,7 @@ Rotors::Rotors(std::string const& rotor, int ring_setting,
         turnover_ = V_turnover;
     }
 
-    if (_next != nullptr)
-        next_rotor = _next;
-    else
-        next_rotor = nullptr;
+    next_rotor = _next;
 
     window_ = window_setting;
     auto char_w = window_setting.c_str();
@@ -45,6 +44,7 @@ void Rotors::Step() {
     current_position_ = (current_position_ + 1) % 26;
     if (next_rotor != nullptr && window_ == turnover_) {
         next_rotor->Step();
+        std::cout << "stepping " << wiring_ << std::endl;
     }
     window_ = current_position_ + 'A';
 }

@@ -1,14 +1,13 @@
 // Copyright (C) 2024 The Author
-#include "Application.h"
+#include "Application.hpp"
 
 #include <algorithm>
 #include <cctype>
 #include <cstdio>
 #include <cstring>
-#include <string>
 
 #include "../imgui/imgui.h"
-
+#include "Cracker.hpp"
 Application::Application() {
     ImGui::StyleColorsDark();
     StyleGui();
@@ -117,7 +116,6 @@ void Application::Run() {
 
     ImGui::SeparatorText("Input message");
     TextInput();
-    ImGui::ShowDemoWindow();
     if (ImGui::Button("Encrypt")) {
         ConfigureWithSettings();
     }
@@ -125,7 +123,8 @@ void Application::Run() {
     if (ImGui::Button("Quit")) {
         should_quit = true;
     }
-    ImGui::EndGroup();
+    if ImGui
+        ::EndGroup();
     ImGui::End();
 }
 
