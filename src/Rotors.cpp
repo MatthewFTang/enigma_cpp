@@ -1,8 +1,6 @@
 // Copyright (c) 2024 Author. All Rights Reserved.
 #include "Rotors.hpp"
 
-#include <iostream>
-#include <ostream>
 #include <string>
 
 Rotors::Rotors(std::string const& rotor, int ring_setting,
@@ -44,9 +42,8 @@ void Rotors::Step() {
     current_position_ = (current_position_ + 1) % 26;
     if (next_rotor != nullptr && window_ == turnover_) {
         next_rotor->Step();
-        std::cout << "stepping " << wiring_ << std::endl;
     }
-    window_ = current_position_ + 'A';
+    window_ = std::to_string(current_position_ + 'A');
 }
 int Rotors::EncodeDecodeLetterInt(int index, bool forwards) {
     auto pos = pos_modulo(index + current_position_, 26);
@@ -63,9 +60,4 @@ int Rotors::EncodeDecodeLetterInt(int index, bool forwards) {
 
 const char& Rotors::returnLetter(int index, bool forwards) {
     return wiring_[index];
-}
-int Rotors::pos_modulo(int n, int m) {
-    int val = n % m;
-    if (val < 0) val += m;
-    return val;
 }

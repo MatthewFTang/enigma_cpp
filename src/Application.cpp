@@ -102,7 +102,7 @@ void Application::Run() {
     ImGui::SetNextWindowPos({0, 0});
     ImGui::Begin("Enigma simulator", nullptr,
                  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-                     ImGuiWindowFlags_NoMove);
+                     ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar);
     ImGui::BeginGroup();
     ImGui::SeparatorText("Settings");
 
@@ -116,18 +116,30 @@ void Application::Run() {
 
     ImGui::SeparatorText("Input message");
     TextInput();
+    ImGui::SeparatorText("Output");
+    DisplayCipher();
     if (ImGui::Button("Encrypt")) {
         ConfigureWithSettings();
     }
-    DisplayCipher();
+    ImGui::SameLine();
+    if (ImGui::Button("Crack")) {
+        RunCracking();
+    }
+    ImGui::SameLine();
     if (ImGui::Button("Quit")) {
         should_quit = true;
     }
-    if ImGui
-        ::EndGroup();
+    ImGui::EndGroup();
     ImGui::End();
 }
 
+void Application::RunCracking() {
+    Cracker cracker(message_);
+    cracker.RunOnRings();
+    cracker.RunOnPlugboard();
+    settings_ = cracker.GetCurrentSettings();
+    ConfigureWithSettings();
+}
 std::string Application::IntToRoman(int rotor) {
     switch (rotor) {
         case (0):

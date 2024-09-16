@@ -20,7 +20,12 @@ class Rotors {
     int current_position_{};
 
     void invert_wiring();
-    int pos_modulo(int n, int m);
+    static int pos_modulo(int n, int m) {
+        int val = n % m;
+        if (val < 0) val += m;
+        return val;
+    }
+
     std::string I_wiring = "EKMFLGDQVZNTOWYHXUSPAIBRCJ";
     std::string II_wiring = "AJDKSIRUXBLHWTMCQGZNPYFVOE";
     std::string III_wiring = "BDFHJLCPRTXVZNYEIWGAKMUSQO";

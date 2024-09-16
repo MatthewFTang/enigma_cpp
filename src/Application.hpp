@@ -10,7 +10,7 @@ class Application {
     Application();
     ~Application() = default;
     void Run();
-    bool ShouldQuit() const { return should_quit; }
+    [[nodiscard]] bool ShouldQuit() const { return should_quit; }
 
    private:
     void WindowSelector();
@@ -20,11 +20,12 @@ class Application {
     void ConfigureWithSettings();
     void PlugboardSettings();
     void DisplayCipher();
-
+    void RunCracking();
     std::string IntToRoman(int rotor);
     std::string FormatMessageForMorse(const std::string& message);
     void ParsePlugboardSettings();
     void StyleGui();
+
     bool should_quit = false;
     int reflector_selection_ = 1;
     int window_selection_[3] = {0, 1, 2};
