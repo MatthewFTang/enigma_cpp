@@ -4,12 +4,10 @@ A GUI-based application to encrypt and decrypt messages using a simulated **Enig
 
 This project is developed using **C++** and leverages modern libraries like **GLFW**, **OpenGL**, and **Dear ImGui** for the graphical interface.
 
-## Screenshots
 
 ![Alt Text](./screenshot.png)
 ---
 
----
 
 ## Features
 
