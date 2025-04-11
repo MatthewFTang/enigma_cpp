@@ -84,8 +84,7 @@ enigma_cpp
 
 ## Screenshots
 
-*(Include screenshots of your application interface here to showcase its functionality.)*
-
+![Alt Text](./screenshot.png)
 ---
 
 ## Contributing
