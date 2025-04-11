@@ -4,6 +4,11 @@ A GUI-based application to encrypt and decrypt messages using a simulated **Enig
 
 This project is developed using **C++** and leverages modern libraries like **GLFW**, **OpenGL**, and **Dear ImGui** for the graphical interface.
 
+## Screenshots
+
+![Alt Text](./screenshot.png)
+---
+
 ---
 
 ## Features
@@ -80,11 +85,6 @@ enigma_cpp
 - **Encryption/Decryption**: Enter a message in the GUI text input box and click the appropriate button to encrypt or decrypt the message.
 - **Configuration**: Customize the Enigma machine settings (e.g., rotors, plugboards) to simulate different encryption modes.
 
----
-
-## Screenshots
-
-![Alt Text](./screenshot.png)
 ---
 
 ## Contributing
