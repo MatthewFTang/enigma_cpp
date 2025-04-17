@@ -44,7 +44,7 @@ All dependencies will be automatically fetched and built using `FetchContent` (n
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your_username/enigma_cpp.git
+   git clone https://github.com/MatthewFTang/enigma_cpp.git
    cd enigma_cpp
    ```
 
