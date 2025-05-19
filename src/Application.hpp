@@ -5,6 +5,7 @@
 
 #include "Enigma.hpp"
 #include "EnigmaSettings.hpp"
+#include <memory>
 class Application {
    public:
     Application();
@@ -31,7 +32,8 @@ class Application {
     int window_selection_[3] = {0, 1, 2};
     int rotor_selection_[4] = {0, 1, 2, 3};
     std::unordered_map<char, char> plugboard_settings_;
-    char message_[1024 * 16];
+    //char message_[1024];
+    std::string message_ = "HELLO WORLD";
     std::string cipher_;
     std::string plugboard_message_ = "ab cd";
     Enigma enigma_;

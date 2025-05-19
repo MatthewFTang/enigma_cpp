@@ -16,8 +16,15 @@ Application::Application() {
 void Application::TextInput() {
     ImGui::BeginChild("text", {window_width_, top_settings_height_});
     static ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
-    ImGui::InputTextMultiline("adf", &message_[0], IM_ARRAYSIZE(message_),
-                              {window_width_, 200}, flags);
+
+    // Ensure your string has enough capacity
+    if (message_.size() < 1024 * 16) message_.resize(1024 * 16);
+
+    // Pass the buffer to ImGui
+    ImGui::InputTextMultiline("Message", &message_[0], message_.size() + 1,
+                              ImVec2(window_width_, 200), flags);
+
+
     ImGui::EndChild();
 }
 
