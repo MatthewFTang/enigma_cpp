@@ -47,7 +47,7 @@ int main(int, char**) {
     glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
     // Create window with graphics context
     GLFWwindow* window =
-        glfwCreateWindow(1280, 1200, "Enigma Machine", NULL, NULL);
+        glfwCreateWindow(800, 800, "Enigma Machine", NULL, NULL);
     if (window == nullptr) return 1;
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);  // Enable vsync
@@ -73,13 +73,12 @@ int main(int, char**) {
 
     io.Fonts->AddFontFromFileTTF("assets/fonts/test.ttf", 18.0f);
 
-    bool show_demo_window = true;
-    bool show_another_window = false;
+  
     ImVec4 clear_color = ImVec4(0.45f, 0.45f, 0.60f, .4f);
 
     Application myApp;
     ImGuiWindowFlags window_flags;
-    window_flags |= ImGuiWindowFlags_NoMove;
+    //window_flags |= ImGuiWindowFlags_NoMove;
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         if (glfwGetWindowAttrib(window, GLFW_ICONIFIED) != 0) {

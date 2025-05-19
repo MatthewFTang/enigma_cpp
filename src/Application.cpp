@@ -105,11 +105,9 @@ void Application::DisplayCipher() {
 }
 
 void Application::Run() {
-    ImGui::SetNextWindowSize({1280, window_width_});
+    ImGui::SetNextWindowSize({window_width_, 800});
     ImGui::SetNextWindowPos({0, 0});
-    ImGui::Begin("Enigma simulator", nullptr,
-                 ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-                     ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar);
+    ImGui::Begin("Enigma simulator", nullptr );
     ImGui::BeginGroup();
     ImGui::SeparatorText("Settings");
 
